@@ -35,6 +35,8 @@ async function run() {
     app.get("/allFoods", async(req, res)=>{
       const search = req.query.search;
       const category = req.query.category;
+      const region = req.query.region;
+      const sort = req.query.sort;
       const price = req.query.price;
 
       let query = {};
@@ -43,6 +45,9 @@ async function run() {
       }
       if (category) {
         query.category = category;
+      }
+      if (region) {
+        query.region = region;
       }
       if (price) {
         const [minPrice, maxPrice] = price.split("-").map(Number);
