@@ -33,8 +33,22 @@ async function run() {
 
 
     app.get("/allFoods", async(req, res)=>{
-      
-      const result = await allFoodCollection.find().toArray();
+      const search = req.query.search;
+      const category = req.query.category;
+      const price = req.query.price;
+
+      let query = {};
+      if (search) {
+        query.name = { $regex: search, $options: "i" };
+      }
+      if (category) {
+        query.category = category;
+      }
+      if (price) {
+        const [minPrice, maxPrice] = price.split("-").map(Number);
+        query.price = { $gte: minPrice, $lte: maxPrice };
+      }
+      const result = await allFoodCollection.find(query).toArray();
       if (result.length === 0) {
         return res.status(204).send();
       }
